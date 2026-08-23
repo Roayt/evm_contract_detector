@@ -9,10 +9,22 @@ async def gets_block(client,number):
     r.raise_for_status()
         
     result=r.json()["result"]["transactions"]
-
     return result
 
-
+async def get_contract(client,tx):
+            payload2={
+                "jsonrpc":"2.0",
+                "method":"eth_getTransactionReceipt",
+                "params":[tx["hash"]],
+                "id":1
+            }
+            rt=await client.post("https://rpc.testnet.arc.io",json=payload2,timeout=20.0)
+            rt.raise_for_status()
+            result2=rt.json()["result"] ["contractAddress"]
+            
+            return result2
+            
+            
 
     
 
