@@ -23,7 +23,20 @@ async def get_contract(client,tx):
             result2=rt.json()["result"] ["contractAddress"]
             
             return result2
-            
+
+async def get_latest_arc_block(client):
+        payload3={
+                "jsonrpc":"2.0",
+                "method":"eth_blockNumber",
+                "params":[],
+                "id":1
+        }
+
+        rt=await client.post("https://rpc.testnet.arc.io",json=payload3,timeout=20.0)
+        rt.raise_for_status()
+        result=rt.json()["result"]
+
+        return result
             
 
     
