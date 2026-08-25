@@ -20,7 +20,7 @@ async def get_contract(client,tx):
             }
             rt=await client.post("https://rpc.testnet.arc.io",json=payload2,timeout=20.0)
             rt.raise_for_status()
-            result2=rt.json()["result"] ["contractAddress"]
+            result2=rt.json()["result"]["contractAddress"]
             
             return result2
 
