@@ -5,11 +5,15 @@ async def gets_block(client,number):
     "params":[number,True],
     "id":1
 }
-    r=await client.post("https://rpc.testnet.arc.io",json=payload,timeout=20.0)
-    r.raise_for_status()
-        
-    result=r.json()["result"]["transactions"]
-    return result
+    try:
+        r=await client.post("https://rpc.testnet.arc.io",json=payload,timeout=20.0)
+        r.raise_for_status()
+            
+        result=r.json()["result"]["transactions"]
+        return result
+    
+    except Exception:
+          return None 
 
 async def get_contract(client,tx):
             payload2={
@@ -18,11 +22,19 @@ async def get_contract(client,tx):
                 "params":[tx["hash"]],
                 "id":1
             }
-            rt=await client.post("https://rpc.testnet.arc.io",json=payload2,timeout=20.0)
-            rt.raise_for_status()
-            result2=rt.json()["result"]["contractAddress"]
-            
-            return result2
+
+            try:
+                rt=await client.post("https://rpc.testnet.arc.io",json=payload2,timeout=20.0)
+                rt.raise_for_status()
+                result2=rt.json()["result"]["contractAddress"]
+
+                if result2 is None:
+                      print("Transaction Receipt deleted from the Node")
+                
+                return result2
+
+            except Exception:
+                   return None
 
 async def get_latest_arc_block(client):
         payload3={
@@ -31,12 +43,16 @@ async def get_latest_arc_block(client):
                 "params":[],
                 "id":1
         }
+        try:
 
-        rt=await client.post("https://rpc.testnet.arc.io",json=payload3,timeout=20.0)
-        rt.raise_for_status()
-        result=rt.json()["result"]
+            rt=await client.post("https://rpc.testnet.arc.io",json=payload3,timeout=20.0)
+            rt.raise_for_status()
+            result=rt.json()["result"]
 
-        return result
+            return result
+
+        except Exception:
+            return None 
             
 
     
