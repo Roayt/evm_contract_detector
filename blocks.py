@@ -24,7 +24,7 @@ async def get_latest_block(client):
             result= await gets_block(client,blocknum)
 
             if result is None:
-                    print("Received None object continuinf back the loop")
+                    print("Received None object continuine back the loop")
                     await asyncio.sleep(5)
                     continue
             
