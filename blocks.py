@@ -1,16 +1,22 @@
 from rpc import get_latest_arc_block,gets_block,get_contract
 import time 
 import asyncio
-
+from last_seen import write_last_seen,read_last_seen
 
 async def get_latest_block(client):
 
     try:
-        nums=await get_latest_arc_block(client)
+        nums=read_last_seen()
+
         if nums is None:
-            raise ValueError("Rpc returned None object")
-        
-        last_seen=(int(nums,16))
+            print("stored file returned None object so using default caller")
+            t=await get_latest_arc_block(client)
+            if t is None:
+                raise ValueError("Im receiving none object")   
+            last_seen=int(t,16)
+        else:
+            last_seen=nums
+            print(last_seen)
 
         while True:
             num=await get_latest_arc_block(client)
@@ -35,8 +41,11 @@ async def get_latest_block(client):
                             continue 
                         
                         print(f"Contract Address is {result2}")
+                last_seen=code
 
-            last_seen=code
+            
+                write_last_seen(last_seen)
+
             await asyncio.sleep(2)
 
     except Exception as e:
