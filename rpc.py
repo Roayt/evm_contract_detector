@@ -1,3 +1,6 @@
+import logging
+logger=logging.getLogger(__name__)
+
 async def gets_block(client,number):
     payload={
     "jsonrpc":"2.0",
@@ -29,7 +32,7 @@ async def get_contract(client,tx):
                 result2=rt.json()["result"]["contractAddress"]
 
                 if result2 is None:
-                      print("Transaction Receipt deleted from the Node")
+                      logger.warning("Transaction Receipt deleted from the Node")
                 
                 return result2
 
