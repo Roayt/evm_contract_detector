@@ -43,8 +43,8 @@ async def get_latest_block(client):
                         print(f"Contract Address is {result2}")
                 last_seen=code
 
-            
-                write_last_seen(last_seen)
+              
+                write_last_seen(i)
 
             await asyncio.sleep(2)
 
