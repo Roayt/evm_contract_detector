@@ -5,14 +5,14 @@ from last_seen import write_last_seen,read_last_seen
 import logging
 logger=logging.getLogger(__name__)
 
-async def get_latest_block(client):
+async def get_latest_block(client,url):
 
     try:
         nums=read_last_seen()
 
         if nums is None:
             logger.error("stored file returned None object so using default caller")
-            t=await get_latest_arc_block(client)
+            t=await get_latest_arc_block(client,url)
             if t is None:
                 raise ValueError("Im receiving none object")   
             last_seen=int(t,16)
@@ -20,7 +20,7 @@ async def get_latest_block(client):
             last_seen=nums
         while True:
             try:
-                num=await get_latest_arc_block(client)
+                num=await get_latest_arc_block(client,url)
                 code=int(num,16)
             except Exception as e:
                 logger.warning(f"couldn't fetch the block height,trying again: {e}")
@@ -30,7 +30,7 @@ async def get_latest_block(client):
             for i in range(last_seen +1,code+1):
                 blocknum=(hex(i))
 
-                result= await gets_block(client,blocknum)
+                result= await gets_block(client,blocknum,url)
                 if result is None:
                     logger.error("Received None object continuine back the loop")
                     await asyncio.sleep(5)
@@ -38,7 +38,7 @@ async def get_latest_block(client):
                            
                 for txs in result:
                     if txs["to"] is  None:
-                        result2= await get_contract(client,txs)
+                        result2= await get_contract(client,txs,url)
                         if result2 is None:
                             logger.warning("received None from Nodes,may receipt not available the moment")
                             continue 

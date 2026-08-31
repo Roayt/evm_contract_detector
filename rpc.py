@@ -1,7 +1,7 @@
 import logging
 logger=logging.getLogger(__name__)
 
-async def gets_block(client,number):
+async def gets_block(client,number,url):
     payload={
     "jsonrpc":"2.0",
     "method":"eth_getBlockByNumber",
@@ -9,7 +9,7 @@ async def gets_block(client,number):
     "id":1
 }
     try:
-        r=await client.post("https://rpc.testnet.arc.io",json=payload,timeout=20.0)
+        r=await client.post(url,json=payload,timeout=20.0)
         r.raise_for_status()
             
         result=r.json()["result"]["transactions"]
@@ -18,7 +18,7 @@ async def gets_block(client,number):
     except Exception:
           return None 
 
-async def get_contract(client,tx):
+async def get_contract(client,tx,url):
             payload2={
                 "jsonrpc":"2.0",
                 "method":"eth_getTransactionReceipt",
@@ -27,7 +27,7 @@ async def get_contract(client,tx):
             }
 
             try:
-                rt=await client.post("https://rpc.testnet.arc.io",json=payload2,timeout=20.0)
+                rt=await client.post(url,json=payload2,timeout=20.0)
                 rt.raise_for_status()
                 result2=rt.json()["result"]["contractAddress"]
 
@@ -39,7 +39,7 @@ async def get_contract(client,tx):
             except Exception:
                    return None
 
-async def get_latest_arc_block(client):
+async def get_latest_arc_block(client,url):
         payload3={
                 "jsonrpc":"2.0",
                 "method":"eth_blockNumber",
@@ -48,7 +48,7 @@ async def get_latest_arc_block(client):
         }
         try:
 
-            rt=await client.post("https://rpc.testnet.arc.io",json=payload3,timeout=20.0)
+            rt=await client.post(url,json=payload3,timeout=20.0)
             rt.raise_for_status()
             result=rt.json()["result"]
 
