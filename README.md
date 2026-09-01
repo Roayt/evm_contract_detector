@@ -38,8 +38,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ### 2. Clone repository 
 ```bash
-git clone https://github.com/Roayt/arc_smart_contract_deployment_monitor.git
-cd arc_smart_contract_deployment_monitor
+git clone https://github.com/Roayt/arc_contract_monitor.git
+cd arc_contract_monitor
 uv run main.py
 ``` 
 
