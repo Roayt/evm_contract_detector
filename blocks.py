@@ -9,7 +9,6 @@ async def get_latest_block(client,url,time,block_height):
     try:
 
         nums=read_last_seen()
-
         if nums is None:
             logger.error("stored file returned None object so using default caller")
 
