@@ -1,4 +1,4 @@
-from rpc import get_latest_arc_block,gets_block,get_contract
+from rpc import get_latest_arc_block,gets_block,get_contract,get_symbol
 import asyncio
 from last_seen import write_last_seen,read_last_seen
 import logging
@@ -50,7 +50,10 @@ async def get_latest_block(client,url,time,block_height):
                             logger.warning("received None from Nodes,may receipt not available the moment")
                             continue 
                         
-                        logger.info(f"Contract Address is {result2}")
+                        contract=result2
+                        symbol= await get_symbol(client,url,contract)
+                        logger.info(f"The symbol is {symbol}")
+
                 last_seen=code
 
               
