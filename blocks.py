@@ -52,7 +52,7 @@ async def get_latest_block(client,url,time,block_height):
                         
                         contract=result2
                         symbol= await get_symbol(client,url,contract)
-                        logger.info(f"The symbol is {symbol}")
+                        logger.info(f"Contract Address: {result2} Symbol:{symbol}")
 
                 last_seen=code
 

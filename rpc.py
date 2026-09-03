@@ -80,7 +80,7 @@ async def get_symbol(client,url,contract):
                 cl=result[2:]
                 syms=cl[64:128]
                 sym=int(syms,16)
-                symm=bytes.fromhex(sym).decode()
+                symm=bytes.fromhex(cl[128:128 + sym *2]).decode()
                 return symm
         except Exception as e:
             return f"received non object from symbol call{e}"
