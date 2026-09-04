@@ -1,5 +1,5 @@
 [project]
-name = "arc-smart-contract-deployment-monitor"
+name = "evm_contract_monitor"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
