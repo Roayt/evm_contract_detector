@@ -1,6 +1,6 @@
-# Arc Contract Monitor 
+# EVM Contract Detector
 
-This script monitors contract deployments on Arc Layer 1 chain.
+This script etects 
 ## What it does
 
 - Extract contract address deployed in a block 
@@ -38,8 +38,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ### 2. Clone repository 
 ```bash
-git clone https://github.com/Roayt/arc_contract_monitor.git
-cd arc_contract_monitor
+git clone https://github.com/Roayt/evm_contract_detector.git
+cd evm_contract_detector
 uv run main.py
 ``` 
 

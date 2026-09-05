@@ -45,17 +45,21 @@ async def get_latest_block(client,url,time,block_height):
                            
                 for txs in result:
                     if txs["to"] is  None:
+                        froms=txs["from"]
                         result2= await get_contract(client,txs,url)
+               
                         if result2 is None:
                             logger.warning("received None from Nodes,may receipt not available the moment")
                             continue 
                         
                         contract=result2
                         symbol= await get_symbol(client,url,contract)
-                        logger.info(f"Contract Address: {result2} Symbol:{symbol}")
+                                            
+                        logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbol}")
 
-                last_seen=code
+                
 
+                last_seen=i
               
                 write_last_seen(i)
 
