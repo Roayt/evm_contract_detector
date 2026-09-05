@@ -98,6 +98,16 @@ The logs are also stored in arc_monitor.log
 - Receipts unavailable for pruned history 
 - Current state Testnet
 
+## Disclaimer 
+This script detects raw on-chain contract address and the symbol a contract was deployed with.
+It does not verify, audit or endorse anything it prints.
+
+Symbols on a blockchain are not unique. Anyone sitting anywhere in the world can deploy contract returning any symbol according to their want.
+The only thing that identifies a token is its contract address, every token in existence has a different contract address. 
+
+This script performs no supply, ownership or safety checks. Most deployments on public chain are spam, tests or scams.
+Verify every contract address deeply before acting on it.
+
 
 ## License 
 
