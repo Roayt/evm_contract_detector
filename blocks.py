@@ -4,7 +4,7 @@ from last_seen import write_last_seen,read_last_seen
 import logging
 logger=logging.getLogger(__name__)
 
-async def get_latest_block(client,url,time,block_height):
+async def get_latest_block(client,url,time,block_height,ticker):
 
     try:
 
@@ -53,9 +53,15 @@ async def get_latest_block(client,url,time,block_height):
                             continue 
                         
                         contract=result2
-                        symbol= await get_symbol(client,url,contract)
-                                            
-                        logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbol}")
+                        symbols= await get_symbol(client,url,contract)
+                        if symbols is None:
+                             logger.warning("received None object from symbol call")
+                             continue
+                        
+                        if symbols.casefold() ==ticker.casefold():
+                             logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbols}")
+                        else:
+                             logger.debug("symbol not matching according user demand")
 
                 
 
