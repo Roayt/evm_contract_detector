@@ -4,7 +4,7 @@ from last_seen import write_last_seen,read_last_seen
 import logging
 logger=logging.getLogger(__name__)
 
-async def get_latest_block(client,url,time,block_height,ticker):
+async def get_latest_block(client,url,time,block_height,ticker,address):
 
     try:
 
@@ -49,28 +49,34 @@ async def get_latest_block(client,url,time,block_height,ticker):
                         result2= await get_contract(client,txs,url)
                
                         if result2 is None:
-                            logger.warning("received None from Nodes,may receipt not available the moment")
+                            logger.warning("received None from Nodes,may receipt not available at the moment")
                             continue 
                         
                         contract=result2
                         symbols= await get_symbol(client,url,contract)
                         if symbols is None:
-                             logger.warning("received None object from symbol call")
+                             logger.debug("received None object from symbol call")
                              continue
-                        
-                        if symbols.casefold() ==ticker.casefold():
-                             logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbols}")
+
+                        if address is None:
+                                if symbols.casefold() ==ticker.casefold():
+                                        logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbols}")
+                                else:
+                                    logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}")
+
                         else:
-                             logger.debug("symbol not matching according user demand")
+
+                            if froms.casefold() in address and ticker.casefold()==symbols.casefold():
+                                logger.info(f"Address match! from:{froms} , Contract Address:{result2} Symbol:{symbols}")
+
+                        
 
                 
-
                 last_seen=i
               
                 write_last_seen(i)
 
             await asyncio.sleep(time)
-
 
 
     except Exception as e:
