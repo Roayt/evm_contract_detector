@@ -46,8 +46,12 @@ async def get_latest_block(client,url,time,block_height,ticker,address):
                 for txs in result:
                     if txs["to"] is  None:
                         froms=txs["from"]
+
+                        if address is not None and froms.casefold() not in address:
+                             continue
+                        
                         result2= await get_contract(client,txs,url)
-               
+                
                         if result2 is None:
                             logger.warning("received None from Nodes,may receipt not available at the moment")
                             continue 
@@ -55,21 +59,14 @@ async def get_latest_block(client,url,time,block_height,ticker,address):
                         contract=result2
                         symbols= await get_symbol(client,url,contract)
                         if symbols is None:
-                             logger.debug("received None object from symbol call")
+                             logger.debug(f"received None object from symbol call, the contract received None symbol is {contract}")
                              continue
 
-                        if address is None:
-                                if symbols.casefold() ==ticker.casefold():
-                                        logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbols}")
-                                else:
-                                    logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}")
-
+                
+                        if symbols.casefold() ==ticker.casefold():
+                                logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbols}")
                         else:
-
-                            if froms.casefold() in address and ticker.casefold()==symbols.casefold():
-                                logger.info(f"Address match! from:{froms} , Contract Address:{result2} Symbol:{symbols}")
-
-                        
+                            logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}") 
 
                 
                 last_seen=i
