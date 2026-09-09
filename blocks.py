@@ -1,6 +1,7 @@
 from rpc import get_latest_arc_block,gets_block,get_contract,get_symbol
 import asyncio
 from last_seen import write_last_seen,read_last_seen
+from telegram_client import telegram_alert
 import logging
 logger=logging.getLogger(__name__)
 
@@ -65,8 +66,17 @@ async def get_latest_block(client,url,time,block_height,ticker,address):
                 
                         if symbols.casefold() ==ticker.casefold():
                                 logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbols}")
+
+                                message=("Contract detected! 🚨\n"
+                                                f"Creatore:{froms}\n"
+                                                f"Contract Address:{result2}\n"
+                                                f"Symbol:{symbols}")
+                                
+                                await telegram_alert(client,message)
                         else:
                             logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}") 
+
+                        
 
                 
                 last_seen=i
