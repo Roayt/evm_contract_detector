@@ -3,9 +3,9 @@ import asyncio
 from last_seen import write_last_seen,read_last_seen
 from telegram_client import telegram_alert
 import logging
-logger=logging.getLogger(__name__)
+logger=logging.getLogger(__name__)    
 
-async def get_latest_block(client,url,time,block_height,ticker,address):
+async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rpc):
 
     try:
 
@@ -72,7 +72,7 @@ async def get_latest_block(client,url,time,block_height,ticker,address):
                                                 f"Contract Address:{result2}\n"
                                                 f"Symbol:{symbols}")
                                 
-                                await telegram_alert(client,message)
+                                await telegram_alert(client,message,chatId,rpc)
                         else:
                             logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}") 
 

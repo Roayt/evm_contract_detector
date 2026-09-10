@@ -1,6 +1,7 @@
 import httpx
 import asyncio
 from blocks import get_latest_block
+from config import load_data
 
 import argparse
 
@@ -27,10 +28,12 @@ async def get_block():
     logger.warning("Token tickers on a blockchain are not unique. Anyone can create a token with any ticker and deploy it. \n" \
     "The thing that is unique is contract address, as every token deployed on a blockchain has a different contract address.")
 
+    chatId,rpc=load_data()
+
 
     async with httpx.AsyncClient() as client:
         await get_latest_block(client,args.rpc_url,args.interval,
-                               args.start_block,args.symbol,args.address)
+                               args.start_block,args.symbol,args.address,chatId,rpc)
    
         
 if __name__=="__main__":                         
