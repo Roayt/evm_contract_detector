@@ -9,6 +9,7 @@ dependencies = [
     "anyio>=4.14.2",
     "async>=0.6.2",
     "httpx>=0.28.1",
+    "pytest>=9.1.1",
     "python-dotenv>=1.2.3",
 ]
 
@@ -16,3 +17,6 @@ dependencies = [
 dev = [
     "pytest>=9.1.1",
 ]
+
+[tool.pytest.ini_options]
+pythonpath=["."]

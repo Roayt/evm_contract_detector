@@ -57,6 +57,14 @@ async def get_latest_arc_block(client,url):
         except Exception:
             return None 
 
+def decode_symbol(result):
+            cl=result[2:]
+            syms=cl[64:128]
+            sym=int(syms,16)
+            symm=bytes.fromhex(cl[128:128 + sym *2]).decode()
+            return symm
+
+
 async def get_symbol(client,url,contract):
         payload3={
                 "jsonrpc":"2.0",
@@ -76,12 +84,10 @@ async def get_symbol(client,url,contract):
                 result=data ["result"]
                 if result=="0x":
                       return None
+                
+            sym=decode_symbol(result)
+            return sym
 
-                cl=result[2:]
-                syms=cl[64:128]
-                sym=int(syms,16)
-                symm=bytes.fromhex(cl[128:128 + sym *2]).decode()
-                return symm
         except Exception:
             logger.exception(contract)
             

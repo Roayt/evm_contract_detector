@@ -158,6 +158,7 @@ dependencies = [
     { name = "anyio" },
     { name = "async" },
     { name = "httpx" },
+    { name = "pytest" },
     { name = "python-dotenv" },
 ]
 
@@ -172,6 +173,7 @@ requires-dist = [
     { name = "anyio", specifier = ">=4.14.2" },
     { name = "async", specifier = ">=0.6.2" },
     { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pytest", specifier = ">=9.1.1" },
     { name = "python-dotenv", specifier = ">=1.2.3" },
 ]
 
