@@ -17,11 +17,3 @@ def load_data():
     telegram_Rpc=f"https://api.telegram.org/bot{token}/sendMessage"
 
     return chatId, telegram_Rpc
-
-
-    
-
-    
-
-
-
