@@ -8,6 +8,7 @@ dependencies = [
     "aiohttp>=3.14.3",
     "anyio>=4.14.2",
     "async>=0.6.2",
+    "asyncpg>=0.31.0",
     "httpx>=0.28.1",
     "pytest>=9.1.1",
     "python-dotenv>=1.2.3",
