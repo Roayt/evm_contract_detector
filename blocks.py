@@ -40,7 +40,7 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
 
                 result= await gets_block(client,blocknum,url)
                 if result is None:
-                    logger.error("Received None object continuine back the loop")
+                    logger.error("Received None from get_block, object continuine back the loop")
                     await asyncio.sleep(time)
                     continue                                                
                            
@@ -54,7 +54,7 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
                         result2= await get_contract(client,txs,url)
                 
                         if result2 is None:
-                            logger.warning("received None from Nodes,may receipt not available at the moment")
+                            logger.warning("received None from get_contract,may receipt not available at the moment")
                             continue 
                         
                         contract=result2
