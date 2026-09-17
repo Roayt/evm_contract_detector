@@ -2,10 +2,11 @@ from rpc import get_latest_arc_block,gets_block,get_contract,get_symbol
 import asyncio
 from last_seen import write_last_seen,read_last_seen
 from telegram_client import telegram_alert
+from db import insert_data
 import logging
 logger=logging.getLogger(__name__)    
 
-async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rpc):
+async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rpc,chain_number,db_pool):
 
     try:
 
@@ -73,10 +74,10 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
                                                 f"Symbol:{symbols}")
                                 
                                 await telegram_alert(client,message,chatId,rpc)
+                                await insert_data(db_pool,result2,str(chain_number),symbols,i,froms)
                         else:
                             logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}") 
 
-                        
 
                 
                 last_seen=i

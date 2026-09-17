@@ -90,6 +90,25 @@ async def get_symbol(client,url,contract):
 
         except Exception:
             logger.exception(contract)
+
+async def get_chain_id(client,url):
+    payload={
+            "jsonrpc":"2.0",
+            "method":"eth_chainId",
+            "params":[],
+            "id":1
+
+        }
+    try:
+          rt= await client.post(url,json=payload,timeout=20)
+          rt.raise_for_status()
+          result= rt.json()["result"]
+          chainId=int(result,16)
+          return chainId
+
+    except Exception:
+          return None 
+
             
 
     

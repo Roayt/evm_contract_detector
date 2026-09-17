@@ -1,6 +1,7 @@
 CREATE TABLE contract(
     id               bigint  GENERATED ALWAYS AS IDENTITY  PRIMARY KEY,
-    address          varchar(42), 
+    deployer         varchar(42),
+    contract_address          varchar(42), 
     chain            text,          --Evm Chain
     symbol           text,          --Evm Chain symbol
     blocknumber      bigint,           --Evm Chain blocknumber
