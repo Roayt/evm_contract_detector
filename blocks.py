@@ -74,7 +74,7 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
                                                 f"Symbol:{symbols}")
                                 
                                 await telegram_alert(client,message,chatId,rpc)
-                                await insert_data(db_pool,result2,str(chain_number),symbols,i,froms)
+                                await insert_data(db_pool,result2,chain_number,symbols,i,froms)
                         else:
                             logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}") 
 
