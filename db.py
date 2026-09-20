@@ -14,3 +14,12 @@ async def insert_data(db_pool,contract_address,chain,symbol,blocknumber,deployer
      except Exception:
         logger.exception("Insert got failed for %s", contract_address) 
         return None
+
+async def get_last_processed_block(db_pool,chain):
+
+    try:
+        sql= "SELECT last_processed_block FROM check_point WHERE chain=$1"
+        return await db_pool.fetchval(sql,chain)
+
+    except Exception:
+        logger.exception("SELECT got failed for %s",chain)

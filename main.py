@@ -2,7 +2,7 @@ import httpx
 import asyncio
 from blocks import get_latest_block
 from config import load_data
-from db import pool
+from db import pool,get_last_processed_block
 from rpc import get_chain_id
 
 import argparse
@@ -33,17 +33,21 @@ async def get_block():
     chatId,rpc,dsn=load_data()
 
     db_pool=await pool(dsn)
+
     try:
         async with httpx.AsyncClient() as client: 
               chain_number= await get_chain_id(client,args.rpc_url)
               if chain_number is None:
                     raise ValueError("Received None from get_chain_id function")
+              
+              last_block=await get_last_processed_block(db_pool,chain_number)
+              logger.info(f"check_point for chain {chain_number} is {last_block}")
             
               await get_latest_block(client,args.rpc_url,args.interval,
                                     args.start_block,args.symbol,args.address,chatId,rpc,chain_number,db_pool)
     finally: 
            await db_pool.close()
- 
-        
+
+             
 if __name__=="__main__":                         
   asyncio.run(get_block())                        
