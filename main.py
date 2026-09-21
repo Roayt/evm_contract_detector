@@ -44,7 +44,7 @@ async def get_block():
               logger.info(f"check_point for chain {chain_number} is {last_block}")
             
               await get_latest_block(client,args.rpc_url,args.interval,
-                                    args.start_block,args.symbol,args.address,chatId,rpc,chain_number,db_pool)
+                                    args.start_block,args.symbol,args.address,chatId,rpc,chain_number,db_pool,last_block)
     finally: 
            await db_pool.close()
 

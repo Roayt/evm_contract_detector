@@ -1,23 +1,22 @@
 from rpc import get_latest_arc_block,gets_block,get_contract,get_symbol
 import asyncio
-from last_seen import write_last_seen,read_last_seen
 from telegram_client import telegram_alert
-from db import insert_data
+from db import insert_data,insert_check_point
 import logging
 logger=logging.getLogger(__name__)    
 
-async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rpc,chain_number,db_pool):
+async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rpc,chain_number,db_pool,last_block):
 
     try:
 
-        nums=read_last_seen()
+        nums=last_block
         if nums is None:
-            logger.error("stored file returned None object so using default caller")
 
             t=await get_latest_arc_block(client,url)
             if t is None:
-                raise ValueError("Im receiving none object") 
+                raise ValueError("Im receiving none object")
             last_seen=int(t,16)
+            logger.warning(f"checkpoint not exists for chain:{chain_number}, starting from current head:{last_seen}") 
 
 
         else:
@@ -80,8 +79,8 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
 
                 
                 last_seen=i
-              
-                write_last_seen(i)
+
+                await insert_check_point(db_pool,chain_number,i)
 
             await asyncio.sleep(time)
 

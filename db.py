@@ -23,3 +23,12 @@ async def get_last_processed_block(db_pool,chain):
 
     except Exception:
         logger.exception("SELECT got failed for %s",chain)
+
+async def insert_check_point(db_pool,chain,last_processed_block):
+    try:
+        sql="INSERT INTO check_point(chain,last_processed_block) VALUES($1,$2) ON CONFLICT(chain) DO UPDATE SET last_processed_block=EXCLUDED.last_processed_block,updated_at=current_timestamp"
+        return await db_pool.execute(sql,chain,last_processed_block)
+
+    except Exception:
+        logger.exception("Insert got failed for %s",chain)
+        return None
