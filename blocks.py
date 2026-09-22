@@ -1,4 +1,4 @@
-from rpc import get_latest_arc_block,gets_block,get_contract,get_symbol
+from rpc import get_latest_arc_block,gets_block_data,get_contract,get_symbol
 import asyncio
 from telegram_client import telegram_alert
 from db import insert_data,insert_check_point
@@ -14,7 +14,7 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
 
             t=await get_latest_arc_block(client,url)
             if t is None:
-                raise ValueError("Im receiving none object")
+                raise ValueError("Im receiving none object from latest block")
             last_seen=int(t,16)
             logger.warning(f"checkpoint not exists for chain:{chain_number}, starting from current head:{last_seen}") 
 
@@ -38,12 +38,13 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
             for i in range(last_seen +1,code+1):
                 blocknum=(hex(i))
 
-                result= await gets_block(client,blocknum,url)
-                if result is None:
+                result= await gets_block_data(client,blocknum,url)
+                if result is None: 
                     logger.error(f"Received None from get_block, object continuing back the loop: {i}")
                     await asyncio.sleep(time)
-                    break                                             
-                           
+                    break
+                block_failed=False
+
                 for txs in result:
                     if txs["to"] is  None:
                         froms=txs["from"]
@@ -54,10 +55,10 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
                         result2= await get_contract(client,txs,url)
                 
                         if result2 is None:
-                            logger.warning("received None from get_contract,may receipt not available at the moment")
-                            continue
-                        
+                            block_failed=True
+                            break 
                         contract=result2
+
                         symbols= await get_symbol(client,url,contract)
                         if symbols is None:
                              logger.debug(f"received None object from symbol call, the contract received None symbol is {contract}")
@@ -76,8 +77,11 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
                                 await insert_data(db_pool,result2,chain_number,symbols,i,froms)
                         else:
                             logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}") 
-
                 
+
+                if block_failed:
+                     logger.warning(f"Block:{i} got failed, retrying again....")
+                     break
                 last_seen=i
 
                 await insert_check_point(db_pool,chain_number,i)

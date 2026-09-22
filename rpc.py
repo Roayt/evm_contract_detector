@@ -1,7 +1,7 @@
 import logging
 logger=logging.getLogger(__name__)
 
-async def gets_block(client,number,url):
+async def gets_block_data(client,number,url):
     payload={
     "jsonrpc":"2.0",
     "method":"eth_getBlockByNumber",
@@ -30,13 +30,10 @@ async def get_contract(client,tx,url):
                 rt=await client.post(url,json=payload2,timeout=20.0)
                 rt.raise_for_status()
                 result2=rt.json()["result"]["contractAddress"]
-
-                if result2 is None:
-                      logger.warning("Transaction Receipt deleted from the Node")
-                
                 return result2
 
             except Exception:
+                   logger.exception("Failed  get the contract for txs %s", tx["hash"])
                    return None
 
 async def get_latest_arc_block(client,url):
