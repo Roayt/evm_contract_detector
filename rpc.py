@@ -1,5 +1,6 @@
 import logging
 logger=logging.getLogger(__name__)
+RPC_FAILURE=object()
 
 async def gets_block_data(client,number,url):
     payload={
@@ -36,7 +37,7 @@ async def get_contract(client,tx,url):
                    logger.exception("Failed  get the contract for txs %s", tx["hash"])
                    return None
 
-async def get_latest_arc_block(client,url):
+async def get_current_block(client,url):
         payload3={
                 "jsonrpc":"2.0",
                 "method":"eth_blockNumber",
@@ -74,19 +75,30 @@ async def get_symbol(client,url,contract):
             rt=await client.post(url,json=payload3,timeout=20.0)
             rt.raise_for_status()
             data=rt.json()
-            if "error"  in data:
-                  return None 
+            if "error" in data:
+                   if data ["error"] ["code"]==3:
+                         return None 
+                   else:
+                         logger.warning(f"couldn't able to fetch the symbol for the contract:{contract} the reason is{data["error"]} ")
+                         return RPC_FAILURE
+                        
             else:
             
                 result=data ["result"]
                 if result=="0x":
                       return None
-                
-            sym=decode_symbol(result)
-            return sym
+            try:
+                sym=decode_symbol(result)
+                return sym
+            
+            except Exception:
+                  logger.warning(f"Failed to decode the string:{result} ,for the contract:{contract}")
+                  return None 
+                  
 
         except Exception:
-            logger.exception(contract)
+            logger.exception(f"Failed to call or get response from rpc for the contract:{contract}")
+            return RPC_FAILURE
 
 async def get_chain_id(client,url):
     payload={
@@ -107,10 +119,3 @@ async def get_chain_id(client,url):
           return None 
 
             
-
-    
-
-
-
-
-    

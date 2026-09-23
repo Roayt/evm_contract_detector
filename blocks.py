@@ -1,4 +1,4 @@
-from rpc import get_latest_arc_block,gets_block_data,get_contract,get_symbol
+from rpc import get_current_block,gets_block_data,get_contract,get_symbol,RPC_FAILURE
 import asyncio
 from telegram_client import telegram_alert
 from db import insert_data,insert_check_point
@@ -12,7 +12,7 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
         nums=last_block
         if nums is None:
 
-            t=await get_latest_arc_block(client,url)
+            t=await get_current_block(client,url)
             if t is None:
                 raise ValueError("Im receiving none object from latest block")
             last_seen=int(t,16)
@@ -28,7 +28,7 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
 
         while True:
             try:
-                num=await get_latest_arc_block(client,url)
+                num=await get_current_block(client,url)
                 code=int(num,16)
             except Exception as e:
                 logger.warning(f"couldn't fetch the block height,trying again: {e}")
@@ -64,7 +64,10 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
                              logger.debug(f"received None object from symbol call, the contract received None symbol is {contract}")
                              continue
 
-                
+                        if symbols is RPC_FAILURE:
+                             block_failed=True
+                             break
+                             
                         if symbols.casefold() ==ticker.casefold():
                                 logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbols}")
 
