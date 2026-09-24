@@ -1,17 +1,23 @@
-from rpc import get_current_block,gets_block_data,get_contract,get_symbol,RPC_FAILURE
 import asyncio
-from telegram_client import telegram_alert
-from db import insert_data,insert_check_point
 import logging
+
+from db import insert_check_point, insert_data
+from rpc import (
+        RPC_FAILURE,
+        get_contract,
+        get_current_block,
+        get_symbol,
+        gets_block_data,
+)
+from telegram_client import telegram_alert
+
 logger=logging.getLogger(__name__)    
 
-async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rpc,chain_number,db_pool,last_block):
-
-    try:
-
+async def get_latest_block(client,url,time,block_height,
+                           ticker,address,chatId,rpc,chain_number,db_pool,last_block):
+        
         nums=last_block
         if nums is None:
-
             t=await get_current_block(client,url)
             if t is None:
                 raise ValueError("Im receiving none object from latest block")
@@ -30,67 +36,66 @@ async def get_latest_block(client,url,time,block_height,ticker,address,chatId,rp
             try:
                 num=await get_current_block(client,url)
                 code=int(num,16)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(f"couldn't fetch the block height,trying again: {e}")
                 await asyncio.sleep(time)
-                continue     
+                continue  
 
-            for i in range(last_seen +1,code+1):
-                blocknum=(hex(i))
+            try:
 
-                result= await gets_block_data(client,blocknum,url)
-                if result is None: 
-                    logger.error(f"Received None from get_block, object continuing back the loop: {i}")
-                    await asyncio.sleep(time)
-                    break
-                block_failed=False
+                for i in range(last_seen +1,code+1):
+                     blocknum=(hex(i))
+                     result= await gets_block_data(client,blocknum,url)
+                     if result is None: 
+                        logger.error(f"Received None from get_block, object continuing back the loop: {i}")
+                        await asyncio.sleep(time)
+                        break
+                     block_failed=False
 
-                for txs in result:
-                    if txs["to"] is  None:
-                        froms=txs["from"]
+                     for txs in result:
+                        if txs["to"] is  None:
+                            froms=txs["from"]
 
-                        if address is not None and froms.casefold() not in address:
-                             continue
-                        
-                        result2= await get_contract(client,txs,url)
-                
-                        if result2 is None:
-                            block_failed=True
-                            break 
-                        contract=result2
+                            if address is not None and froms.casefold() not in address:
+                                continue
+                            
+                            result2= await get_contract(client,txs,url)
+                    
+                            if result2 is None:
+                                block_failed=True
+                                break 
+                            contract=result2
 
-                        symbols= await get_symbol(client,url,contract)
-                        if symbols is None:
-                             logger.debug(f"received None object from symbol call, the contract received None symbol is {contract}")
-                             continue
+                            symbols= await get_symbol(client,url,contract)
+                            if symbols is None:
+                                logger.debug(f"received None object from symbol call, the contract received None symbol is {contract}")
+                                continue
 
-                        if symbols is RPC_FAILURE:
-                             block_failed=True
-                             break
-                             
-                        if symbols.casefold() ==ticker.casefold():
-                                logger.info(f"From: {froms} , Contract Address: {result2} Symbol:{symbols}")
-
-                                message=("Contract detected! 🚨\n"
-                                                f"Creatore:{froms}\n"
-                                                f"Contract Address:{result2}\n"
-                                                f"Symbol:{symbols}")
+                            if symbols is RPC_FAILURE:
+                                block_failed=True
+                                break
                                 
-                                await telegram_alert(client,message,chatId,rpc)
-                                await insert_data(db_pool,result2,chain_number,symbols,i,froms)
-                        else:
-                            logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}") 
-                
+                            if symbols.casefold() ==ticker.casefold():
+                                    logger.info(f"From: {froms} , Contract Address: {result2} Symbol: {symbols}")
 
-                if block_failed:
-                     logger.warning(f"Block:{i} got failed, retrying again....")
-                     break
-                last_seen=i
+                                    message=("Contract detected! 🚨\n"
+                                                    f"Creator:{froms}\n"
+                                                    f"Contract Address:{result2}\n"
+                                                    f"Symbol:{symbols}")
+                                    
+                                    await telegram_alert(client,message,chatId,rpc)
+                                    await insert_data(db_pool,result2,chain_number,symbols,i,froms)
+                            else:
+                                logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}") 
+                    
 
-                await insert_check_point(db_pool,chain_number,i)
+                     if block_failed:
+                        logger.warning(f"Block:{i} got failed, retrying again....")
+                        break
+                     last_seen=i
+
+                     await insert_check_point(db_pool,chain_number,i)
+            except Exception:
+                logger.exception("Unexpected error while processing the blocks")
 
             await asyncio.sleep(time)
-
-
-    except Exception as e:
-        logger.error(f"Response from Rpc is broken: {e}")

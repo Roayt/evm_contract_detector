@@ -1,5 +1,7 @@
-import pytest 
+import pytest
+
 from config import load_data
+
 
 def test_loadata(monkeypatch):
     monkeypatch.setenv("Telegram_Token","testfake2323")

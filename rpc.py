@@ -1,4 +1,5 @@
 import logging
+
 logger=logging.getLogger(__name__)
 RPC_FAILURE=object()
 
@@ -16,7 +17,7 @@ async def gets_block_data(client,number,url):
         result=r.json()["result"]["transactions"]
         return result
     
-    except Exception:
+    except Exception:  # noqa: BLE001
           return None 
 
 async def get_contract(client,tx,url):
@@ -52,7 +53,7 @@ async def get_current_block(client,url):
 
             return result
 
-        except Exception:
+        except Exception:  # noqa: BLE001
             return None 
 
 def decode_symbol(result):
@@ -91,7 +92,7 @@ async def get_symbol(client,url,contract):
                 sym=decode_symbol(result)
                 return sym
             
-            except Exception:
+            except Exception:  # noqa: BLE001
                   logger.warning(f"Failed to decode the string:{result} ,for the contract:{contract}")
                   return None 
                   
@@ -115,7 +116,7 @@ async def get_chain_id(client,url):
           chainId=int(result,16)
           return chainId
 
-    except Exception:
+    except Exception:  # noqa: BLE001
           return None 
 
             
