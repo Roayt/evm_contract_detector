@@ -1,0 +1,20 @@
+services:
+ db:
+  image: postgres:17
+  environment: 
+    POSTGRES_DB: evm_detector
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    DETECTOR_PASSWORD: ${DETECTOR_PASSWORD}
+  volumes:
+    - hheero:/var/lib/postgresql/data
+    - ./initdb:/docker-entrypoint-initdb.d:ro
+  healthcheck:
+    test: ["CMD-SHELL","pg_isready -U postgres -d evm_detector"]
+    interval: 5s
+    timeout: 3s
+    retries: 5
+    start_period: 10s
+
+volumes:
+ hheero: 
