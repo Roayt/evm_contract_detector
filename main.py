@@ -18,7 +18,7 @@ async def get_block():
 
     parser=argparse.ArgumentParser()
     parser.add_argument("--rpc-url",required=True)
-    parser.add_argument("--interval",type=int,default=2)
+    parser.add_argument("--interval",type=int,default=12)
     parser.add_argument("--start-block",type=int,default=None )
     parser.add_argument("--symbol",required=True)
     parser.add_argument("--address",action="append")
