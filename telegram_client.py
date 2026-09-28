@@ -1,4 +1,5 @@
 import logging
+
 logger=logging.getLogger(__name__)
 
 async def telegram_alert(client,message,chatId,telegram_Rpc):
@@ -15,5 +16,5 @@ async def telegram_alert(client,message,chatId,telegram_Rpc):
         else:
             logger.error(data["description"])
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(e)
