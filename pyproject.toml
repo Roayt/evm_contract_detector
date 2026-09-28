@@ -1,16 +1,12 @@
 [project]
 name = "evm_contract_detector"
 version = "0.1.0"
-description = "Add your description here"
+description = "Async Ethereum smart contract detector that detects token's symbol deployed across EVM chains."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "aiohttp>=3.14.3",
-    "anyio>=4.14.2",
-    "async>=0.6.2",
     "asyncpg>=0.31.0",
     "httpx>=0.28.1",
-    "pytest>=9.1.1",
     "python-dotenv>=1.2.3",
 ]
 
@@ -20,4 +16,4 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath=["."]
+pythonpath= ["."]
