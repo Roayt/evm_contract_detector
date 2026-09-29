@@ -35,7 +35,7 @@ async def get_contract(client,tx,url):
                 return result2
 
             except Exception:
-                   logger.exception("Failed  get the contract for txs %s", tx["hash"])
+                   logger.exception("Failed  get the contract for hash: %s", tx["hash"])
                    return None
 
 async def get_current_block(client,url):
