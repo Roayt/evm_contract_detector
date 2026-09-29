@@ -83,8 +83,14 @@ async def get_latest_block(client,url,time,block_height,
                                                     f"Contract Address:{result2}\n"
                                                     f"Symbol:{symbols}")
                                     
-                                    await telegram_alert(client,message,chatId,rpc)
-                                    await insert_data(db_pool,result2,chain_number,symbols,i,froms)
+                                    result3=await insert_data(db_pool,result2,chain_number,symbols,i,froms)
+                                    if result3 is None:
+                                         block_failed=True
+                                         break
+                                    result4=await telegram_alert(client,message,chatId,rpc)
+                                    if result4 is False:
+                                         block_failed= True
+                                         break                                    
                             else:
                                 logger.debug(f"from:{froms},Contract Address:{result2} Symbol:{symbols}") 
                     
