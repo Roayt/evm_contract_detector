@@ -9,9 +9,12 @@ from config import load_data
 from db import get_last_processed_block, pool
 from rpc import get_chain_id
 
+FileHandler=logging.FileHandler('evm_contract_detector.log')
+StreamHandler=logging.StreamHandler()
+
 logger=logging.getLogger(__name__)
 logging.basicConfig(format='%(levelname)s:%(asctime)s - %(name)s -%(message)s',
-                    filename='evm_contract_detector.log',
+                    handlers=[FileHandler,StreamHandler],
                     level=logging.INFO)
 logging.getLogger("httpx").setLevel(logging.WARNING)                                   
 async def get_block():
