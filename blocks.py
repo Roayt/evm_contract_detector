@@ -22,16 +22,17 @@ async def get_latest_block(client,url,time,block_height,
             if t is None:
                 raise ValueError("Im receiving none object from latest block")
             last_seen=int(t,16)
-            logger.warning(f"checkpoint not exists for chain:{chain_number}, starting from current head:{last_seen}") 
+            logger.warning(f"checkpoint not exists for chain:{chain_number}") 
 
 
         else:
             last_seen=nums
 
         if block_height:
+                    logger.info(f"The block height:{block_height} ,provided with --start-block overides database checkpoint")
                     last_seen=block_height
  
-
+        logger.info(f"The block processing will start from:{last_seen+1}")
         while True:
             try:
                 num=await get_current_block(client,url)
