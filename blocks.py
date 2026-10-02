@@ -100,14 +100,14 @@ async def get_latest_block(
                                 f"Symbol:{symbols}"
                             )
 
-                            result3 = await insert_data(
+                            insert_status = await insert_data(
                                 db_pool, contract, chain_number, symbols, i, froms
                             )
-                            if result3 is None:
+                            if insert_status is None:
                                 block_failed = True
                                 break
-                            result4 = await telegram_alert(client, message, chatId, rpc)
-                            if result4 is False:
+                            alert_sent = await telegram_alert(client, message, chatId, rpc)
+                            if alert_sent is False:
                                 block_failed = True
                                 break
                         else:
