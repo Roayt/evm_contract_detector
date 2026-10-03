@@ -2,10 +2,11 @@ import datetime
 import logging
 import os
 from contextlib import asynccontextmanager
+from typing import Annotated
 
 import asyncpg
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
 from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
@@ -30,7 +31,7 @@ async def get_pool(request:Request):
     pool=request.app.state.pool
     return pool
 
-@app.get("/health")
+@app.get("/api/health")
 async def db_pool_health_check(db:asyncpg.Pool=Depends(get_pool)):  # noqa: B008
     try:
         await db.fetchval("SELECT 1")
@@ -47,8 +48,8 @@ class Status(BaseModel):
     last_processed_block:int 
     updated_at: datetime.datetime
 
-@app.get("/status", response_model= list[Status])
-async def check_Point_status(db:asyncpg.Pool=Depends(get_pool)):
+@app.get("/api/status", response_model= list[Status])
+async def checkPoint_status(db:asyncpg.Pool=Depends(get_pool)):
     result= await db.fetch('SELECT chain, last_processed_block,updated_at FROM check_point ORDER BY chain')
     check_point=[]
     for row in result:
@@ -56,3 +57,24 @@ async def check_Point_status(db:asyncpg.Pool=Depends(get_pool)):
 
 
     return check_point
+
+class Contract(BaseModel):
+    id:int 
+    deployer_address: str 
+    contract_address: str    
+    chain:int 
+    symbol: str
+    blocknumber: int   
+    created_at: datetime.datetime
+
+@app.get("/api/contracts",response_model=list[Contract])
+async def get_contract_detail(symbol:str|None=None, chain:int|None=None, limit:Annotated[int,Query(le=200, ge=1)]=50,
+                               offset:Annotated[int,Query(ge=0)]=0, db:asyncpg.Pool=Depends(get_pool),):
+
+    result=await db.fetch('SELECT id, contract_address, chain, symbol, blocknumber, created_at , deployer_address FROM contract WHERE($1::text IS NULL OR lower(symbol)=lower($1)) AND ($2::integer IS NULL OR chain=$2) ORDER BY id DESC LIMIT $3 OFFSET $4', symbol,chain,limit,offset)
+
+    contract_status=[]
+    for row in result:
+        contract_status.append(dict(row))
+    
+    return contract_status
