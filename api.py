@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -5,6 +6,7 @@ from contextlib import asynccontextmanager
 import asyncpg
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Request, status
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -38,4 +40,19 @@ async def db_pool_health_check(db:asyncpg.Pool=Depends(get_pool)):  # noqa: B008
         logger.exception("health check failed")
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                             detail="health check not succeeded") from e
-    
+
+
+class Status(BaseModel):
+    chain:int
+    last_processed_block:int 
+    updated_at: datetime.datetime
+
+@app.get("/status", response_model= list[Status])
+async def check_Point_status(db:asyncpg.Pool=Depends(get_pool)):
+    result= await db.fetch('SELECT chain, last_processed_block,updated_at FROM check_point ORDER BY chain')
+    check_point=[]
+    for row in result:
+        check_point.append(dict(row))
+
+
+    return check_point
