@@ -59,17 +59,15 @@ async def get_latest_block(
                 blocknum = hex(i)
                 receipts = await get_block_receipts(client, blocknum, url)
                 if receipts is None:
-                    logger.error(
-                        f"Received None from get_block_receipts: {i}"
-                    )
+                    logger.error(f"Received None from get_block_receipts: {i}")
                     await asyncio.sleep(time)
                     break
                 block_failed = False
 
                 for receipt in receipts:
                     if receipt["to"] is None:
-                        if receipt["status"]=="0x0":
-                             continue
+                        if receipt["status"] == "0x0":
+                            continue
                         froms = receipt["from"]
 
                         if address is not None and froms.casefold() not in address:
@@ -106,7 +104,9 @@ async def get_latest_block(
                             if insert_status is None:
                                 block_failed = True
                                 break
-                            alert_sent = await telegram_alert(client, message, chatId, rpc)
+                            alert_sent = await telegram_alert(
+                                client, message, chatId, rpc
+                            )
                             if alert_sent is False:
                                 block_failed = True
                                 break

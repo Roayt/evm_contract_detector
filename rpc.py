@@ -3,6 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 RPC_FAILURE = object()
 
+
 async def get_current_block(client, url):
     payload3 = {"jsonrpc": "2.0", "method": "eth_blockNumber", "params": [], "id": 1}
     try:
@@ -79,32 +80,34 @@ async def get_chain_id(client, url):
         logger.exception("Failed to fetch chain id")
         return None
 
-async def get_block_receipts(client,number,url):
-    payload= {
-            "jsonrpc": "2.0",
-            "method": "eth_getBlockReceipts",
-            "params": [number],
-            "id": 1,
-        }
-    
+
+async def get_block_receipts(client, number, url):
+    payload = {
+        "jsonrpc": "2.0",
+        "method": "eth_getBlockReceipts",
+        "params": [number],
+        "id": 1,
+    }
+
     try:
         rt = await client.post(url, json=payload, timeout=20.0)
         rt.raise_for_status()
-        data= rt.json() 
+        data = rt.json()
 
         if "error" in data:
-            logger.warning(f"endpoint returns error for the block:{number} , the reason is {data["error"]}")
+            logger.warning(
+                f"endpoint returns error for the block:{number} , the reason is {data['error']}"
+            )
             return None
-        
-        receipt=data["result"]
+
+        receipt = data["result"]
 
         if receipt is None:
             logger.warning(f"Node doesn't have the block:{number}")
 
             return None
-        
+
         return receipt
-    
 
     except Exception:
         logger.exception(f"Failed to fetch block:{number}")
