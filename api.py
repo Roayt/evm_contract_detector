@@ -76,7 +76,7 @@ class Contract(BaseModel):
     blocknumber: int
     created_at: datetime.datetime
 
-
+ 
 @app.get("/api/contracts", response_model=list[Contract])
 async def get_contract_detail(
     symbol: str | None = None,
