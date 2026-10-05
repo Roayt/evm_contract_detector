@@ -64,7 +64,7 @@ def test_contract_detail():
     "created_at": "2026-09-17T17:25:14.458892Z"
   }]
 def test_specific_contract():
-     response=client.get("/api/contracts/0xfd36b412564060ea7a53c2c4a1afd78636880a41")
+     response=client.get("/api/contracts/0x8e5ecb9a5e416722f41c1c8acec18965ae33e767")
      assert response.status_code==200
      assert response.json()==[{
     "id": 1,

@@ -5,6 +5,7 @@ services:
     POSTGRES_DB: evm_detector
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    API_READER_PASSWORD: ${API_READER_PASSWORD}
     DETECTOR_PASSWORD: ${DETECTOR_PASSWORD}
   volumes:
     - hheero:/var/lib/postgresql/data
