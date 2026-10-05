@@ -101,7 +101,7 @@ async def get_contract_detail(
     return contract_status
 
 
-@app.get("api/contracts/{contract_address}", response_model=list[Contract])
+@app.get("/api/contracts/{contract_address}", response_model=list[Contract])
 async def get_specific_contract(
     contract_address: str = Path(pattern="^0x[0-9a-fA-F]{40}$"),
     db: asyncpg.Pool = Depends(get_pool),
