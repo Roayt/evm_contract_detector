@@ -1,6 +1,3 @@
-from typing import Annotated
-
-from fastapi import Depends, FastAPI
 from fastapi.testclient import TestClient
 
 from api import app, get_pool
