@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import logging
+from logging.handlers import RotatingFileHandler
 
 import httpx
 
@@ -9,13 +10,13 @@ from config import load_data
 from db import get_last_processed_block, pool
 from rpc import get_chain_id
 
-file_handler = logging.FileHandler("evm_contract_detector.log")
 stream_handler = logging.StreamHandler()
+rotating_handler = RotatingFileHandler("evm_contract_detector.log", maxBytes=5242880,backupCount=3)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format="%(levelname)s:%(asctime)s - %(name)s -%(message)s",
-    handlers=[file_handler, stream_handler],
+    handlers=[rotating_handler, stream_handler],
     level=logging.INFO,
 )
 logging.getLogger("httpx").setLevel(logging.WARNING)
