@@ -23,14 +23,13 @@ class FakePool:
 
             return [contract]
 
-    async def fetchrow(self,query,*args):
-        return None
+    
 
 fake_pool=FakePool()
 
-async def overide_get_pool():
+async def override_get_pool():
     return fake_pool
-app.dependency_overrides[get_pool]=overide_get_pool
+app.dependency_overrides[get_pool]=override_get_pool
 
 client=TestClient(app)
 
@@ -39,7 +38,7 @@ def test_health_check():
     assert response.status_code==200
     assert response.json()=={"status":"healthy"}
 
-def test_checkPoint_status():
+def test_checkpoint_status():
     response=client.get("/api/status")
     assert response.status_code==200
     assert response.json()==[{
@@ -72,3 +71,5 @@ def test_specific_contract():
     "blocknumber": 11725161,
     "created_at": "2026-09-17T17:25:14.458892Z"
   }]
+
+

@@ -11,7 +11,9 @@ from db import get_last_processed_block, pool
 from rpc import get_chain_id
 
 stream_handler = logging.StreamHandler()
-rotating_handler = RotatingFileHandler("evm_contract_detector.log", maxBytes=5242880,backupCount=3)
+rotating_handler = RotatingFileHandler(
+    "evm_contract_detector.log", maxBytes=5242880, backupCount=3
+)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
