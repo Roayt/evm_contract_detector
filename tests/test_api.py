@@ -117,13 +117,14 @@ def test_unknown_address(monkeypatch):
     response = client.get("/api/contracts/0x0000000000000000000000000000000000000000")
     assert response.status_code == 404
 
+
 def test_database_failure_check(monkeypatch):
-    failed_pool=FakePool(raise_setting=True)
+    failed_pool = FakePool(raise_setting=True)
 
     def get_failed_pool():
         return failed_pool
 
-    monkeypatch.setitem(app.dependency_overrides,get_pool,get_failed_pool)
-    response=client.get("/api/health")
-    assert response.status_code==503
+    monkeypatch.setitem(app.dependency_overrides, get_pool, get_failed_pool)
+    response = client.get("/api/health")
+    assert response.status_code == 503
     assert "Query got failed" not in response.text
