@@ -118,7 +118,7 @@ def test_unknown_address(monkeypatch):
     assert response.status_code == 404
 
 
-def test_database_failure_check(monkeypatch):
+def test_database_failure_check(monkeypatch): 
     failed_pool = FakePool(raise_setting=True)
 
     def get_failed_pool():

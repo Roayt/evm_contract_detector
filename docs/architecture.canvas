@@ -1,0 +1,21 @@
+{
+	"nodes":[
+		{"id":"83c9a8f931e41bdc","type":"group","x":-2080,"y":80,"width":1920,"height":720,"label":"Docker Compose"},
+		{"id":"b1e5efe68d68e883","type":"text","text":"        Telegram Alert ","x":-1480,"y":-530,"width":240,"height":80,"color":"#2468a8"},
+		{"id":"e0b0f598fd7d3589","type":"text","text":"**EVM Chain** \tRpc-Endpoint","x":-2360,"y":-530,"width":160,"height":80,"color":"6"},
+		{"id":"6fb02f48fb766fc7","type":"text","text":"           User/You\n     Browser or curl request  ","x":-560,"y":-530,"width":300,"height":110,"color":"#50b9b2"},
+		{"id":"85e67eaae86f02b0","type":"file","file":"SQL.png","x":-1520,"y":600,"width":170,"height":170,"color":"#66a4e5"},
+		{"id":"d4a231773b44f842","type":"text","text":"                          PostgreSQL\n                        Database, Postgres:17\n                    Tables:contract,check_point.","x":-1350,"y":600,"width":585,"height":170,"color":"#4caccd"},
+		{"id":"27d8f9ff8f0af04a","type":"text","text":"             API\n           FastAPI\n\nRead-only. Four GET routes\n        under /api","x":-549,"y":127,"width":278,"height":163,"color":"4"},
+		{"id":"a3a4bb422828e767","type":"text","text":"                Detector\n\nChecks every new block and keeps contract deployments that match the symbol and deployer filters.\n        ","x":-1960,"y":125,"width":385,"height":168,"color":"5"}
+	],
+	"edges":[
+		{"id":"27a5aef1f84a7e6b","fromNode":"e0b0f598fd7d3589","fromSide":"bottom","toNode":"a3a4bb422828e767","toSide":"top"},
+		{"id":"cb128b04d8522603","fromNode":"a3a4bb422828e767","fromSide":"top","toNode":"b1e5efe68d68e883","toSide":"bottom"},
+		{"id":"22346b2cbe1f7e3c","fromNode":"6fb02f48fb766fc7","fromSide":"bottom","toNode":"27d8f9ff8f0af04a","toSide":"top"},
+		{"id":"85e0aeba696e4106","fromNode":"27d8f9ff8f0af04a","fromSide":"bottom","toNode":"85e67eaae86f02b0","toSide":"top"},
+		{"id":"6834b4de92528814","fromNode":"a3a4bb422828e767","fromSide":"bottom","toNode":"85e67eaae86f02b0","toSide":"top"},
+		{"id":"91b6cbfbd03091de","fromNode":"6fb02f48fb766fc7","fromSide":"bottom","toNode":"27d8f9ff8f0af04a","toSide":"bottom"},
+		{"id":"4d142d680806b1ef","fromNode":"a3a4bb422828e767","fromSide":"top","toNode":"e0b0f598fd7d3589","toSide":"bottom"}
+	]
+}
