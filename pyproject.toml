@@ -1,7 +1,7 @@
 [project]
 name = "evm_contract_detector"
 version = "0.1.0"
-description = "Async Ethereum smart contract detector that detects token's symbol deployed across EVM chains."
+description = "Async detector for EVM chains that finds newly deployed contracts by their token symbol."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
