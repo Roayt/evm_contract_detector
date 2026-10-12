@@ -172,7 +172,7 @@ The values in this example are made up.
 - Contracts created by other contracts are not seen. The monitor finds deployments made directly by a transaction.
 - It reads blocks that are already on the chain. It does not watch the mempool.
 - Symbol matching compares the whole symbol and ignores upper and lower case. usdc matches USDC, and USDC.e does not.
-- An alert can repeat when a block is tried again.
+- A contract whose `symbol()` call fails three times in a row is skipped, and the monitor logs it as an error.
 - There is no reorg handling. If the chain replaces a block after the monitor processed it, a contract from the replaced block stays in the database.
 - An endpoint that prunes old history has no receipts for very old blocks, so a start far in the past can fail.
 - It has run on testnets only so far.

@@ -11,6 +11,7 @@ from rpc import (
 from telegram_client import telegram_alert
 
 logger = logging.getLogger(__name__)
+SYMBOL_RETRY_LIMIT=3
 
 
 async def get_latest_block(
@@ -45,6 +46,8 @@ async def get_latest_block(
         last_seen = block_height
 
     logger.info(f"The block processing will start from:{last_seen + 1}")
+    failed_block=None
+    failure_count=0
     while True:
         try:
             num = await get_current_block(client, url)
@@ -83,6 +86,19 @@ async def get_latest_block(
                             continue
 
                         if symbols is RPC_FAILURE:
+                            if i == failed_block:
+                                failure_count +=1
+                            else:
+                                failed_block=i
+                                failure_count=1
+
+                            if failure_count >=SYMBOL_RETRY_LIMIT:
+                                logger.error("Block %s: symbol() failed repeatedly for contract %s",
+                                             i,
+                                             contract
+                                             )
+                                continue
+                                
                             block_failed = True
                             break
 
@@ -119,6 +135,8 @@ async def get_latest_block(
                     logger.warning(f"Block:{i} got failed, retrying again....")
                     break
                 last_seen = i
+                failed_block=None
+                failure_count=0
 
                 await insert_check_point(db_pool, chain_number, i)
         except Exception:
