@@ -32,6 +32,7 @@ async def get_last_processed_block(db_pool, chain):
 
     except Exception:
         logger.exception("SELECT got failed for %s", chain)
+        raise
 
 
 async def insert_check_point(db_pool, chain, last_processed_block):
