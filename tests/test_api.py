@@ -29,8 +29,8 @@ class FakePool:
         else:
             contract = {
                 "id": 1,
-                "contract_address": "0x8e5ecb9a5e416722f41c1c8acec18965ae33e767",
-                "deployer_address": "0xfd36b412564060ea7a53c2c4a1afd78636880a41",
+                "contract_address": "0x1111111111111111111111111111111111111111",
+                "deployer_address": "0x2222222222222222222222222222222222222222",
                 "chain": 11155111,
                 "symbol": "TEST2",
                 "blocknumber": 11725161,
@@ -76,8 +76,8 @@ def test_contract_detail():
     assert response.json() == [
         {
             "id": 1,
-            "deployer_address": "0xfd36b412564060ea7a53c2c4a1afd78636880a41",
-            "contract_address": "0x8e5ecb9a5e416722f41c1c8acec18965ae33e767",
+            "deployer_address": "0x2222222222222222222222222222222222222222",
+            "contract_address": "0x1111111111111111111111111111111111111111",
             "chain": 11155111,
             "symbol": "TEST2",
             "blocknumber": 11725161,
@@ -87,13 +87,13 @@ def test_contract_detail():
 
 
 def test_specific_contract():
-    response = client.get("/api/contracts/0x8e5ecb9a5e416722f41c1c8acec18965ae33e767")
+    response = client.get("/api/contracts/0x1111111111111111111111111111111111111111")
     assert response.status_code == 200
     assert response.json() == [
         {
             "id": 1,
-            "deployer_address": "0xfd36b412564060ea7a53c2c4a1afd78636880a41",
-            "contract_address": "0x8e5ecb9a5e416722f41c1c8acec18965ae33e767",
+            "deployer_address": "0x2222222222222222222222222222222222222222",
+            "contract_address": "0x1111111111111111111111111111111111111111",
             "chain": 11155111,
             "symbol": "TEST2",
             "blocknumber": 11725161,
