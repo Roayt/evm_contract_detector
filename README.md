@@ -45,7 +45,7 @@ The path of one block:
 7. When the whole block is finished, its number is saved in the `check_point` table.
 8. The monitor waits for the polling interval and looks for the next block.
 
-After a restart the monitor continues from the saved checkpoint. With an empty database it starts at the current height of the chain.
+After a restart the monitor continues from the saved checkpoint. With an empty database it starts with the next new block.
 
 ## Quick start
 
@@ -171,7 +171,7 @@ The values in this example are made up.
 
 - Contracts created by other contracts are not seen. The monitor finds deployments made directly by a transaction.
 - It reads blocks that are already on the chain. It does not watch the mempool.
-- Symbol matching is exact.
+- Symbol matching compares the whole symbol and ignores upper and lower case. usdc matches USDC, and USDC.e does not.
 - An alert can repeat when a block is tried again.
 - There is no reorg handling. If the chain replaces a block after the monitor processed it, a contract from the replaced block stays in the database.
 - An endpoint that prunes old history has no receipts for very old blocks, so a start far in the past can fail.
